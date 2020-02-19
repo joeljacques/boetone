@@ -1,4 +1,4 @@
-package boethius.Sound
+package boetone.Sound
 
 import scala.math.{log10, rint, pow}
 

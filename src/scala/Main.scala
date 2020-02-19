@@ -1,6 +1,6 @@
-package boethius.Sound
+package boetone.Sound
 
-import boethius.Sound.Pitch.TwelveTone
+import boetone.Sound.Pitch.TwelveTone
 
 object Main extends App {
   val a = TwelveTone.fromPitch(0)
