@@ -1,7 +1,7 @@
-package boetone.Sound
+package boetone.tonality
 
-import Mode.GregorianMode
-import boetone.Sound.Pitch.TwelveTone
+import boetone.tonality.Mode.GregorianMode
+import boetone.tonality.Pitch.TwelveTone
 
 /**
  * Represents all diatonic scales (right now only gregorian modes are defined).

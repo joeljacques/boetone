@@ -1,6 +1,6 @@
-package boetone.Sound
+package boetone.tonality
 
-import scala.math.{log10, rint, pow}
+import scala.math.{log10, pow, rint}
 
 object Pitch {
 
@@ -62,10 +62,11 @@ object Pitch {
     def pitchOctaveFreq(pitch: Double, octave: Int): Double = {
       val newP = (pitch % 12) + (12 * (octave - 4)) // Pitch 0 would be C4
       // somehow 0.0 behaves as if it were 1.0 ????
-      newP match {
+      /*newP match {
         case 0.0 => pow(10, (log10(2) * ((0 - 9) / 12)) + log10(standardPitch))
         case num => pow(10, (log10(2) * ((num - 9) / 12)) + log10(standardPitch))
-      }
+      }*/
+      pow(10, (log10(2) * ((newP - 9) / 12)) + log10(standardPitch))
     }
   }
 

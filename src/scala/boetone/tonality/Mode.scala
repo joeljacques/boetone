@@ -1,4 +1,4 @@
-package boetone.Sound
+package boetone.tonality
 
 /**
  * Provides build tools for scales and pitch spaces

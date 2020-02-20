@@ -1,6 +1,6 @@
-package boetone.Sound
+package boetone.tonality
 
-import boetone.Sound.Pitch.IntegerNotation
+import boetone.tonality.Pitch.IntegerNotation
 
 /**
  * defines a pitch space containing pitch classes
