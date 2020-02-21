@@ -8,7 +8,7 @@ import boetone.tonality.Pitch.TwelveTone
  * the primary constructor shouldn't be used. Use 'fromMode'
  * @param elems
  */
-class DiatonicScale(elems: Seq[TwelveTone], keyPitch: Int) extends PitchSpace[TwelveTone](elems){
+class DiatonicScale(elems: Seq[TwelveTone], keyPitch: Int) extends PitchSpace[TwelveTone](elems) with Scale {
   override def toString: String = "Diatonic Space: " ++ elems.foldLeft("[")((str, tt) => f"${str} (${tt.toString}),").dropRight(1) ++ " ]"
 }
 

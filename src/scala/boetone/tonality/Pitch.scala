@@ -1,11 +1,10 @@
 package boetone.tonality
 
-import scala.math.{log10, pow, rint}
+import scala.math.{log10, pow, rint, floor, round}
+import Intervals._
 
 object Pitch {
 
-  val names: Map[Double, String] = Map(0.0 -> "C", 1.0 -> "C#/Db", 2.0 -> "D", 3.0 -> "D#/Eb", 4.0 -> "E", 5.0 -> "F", 6.0 -> "F#/Gb",
-                                      7.0 -> "G", 8.0 -> "G#/Ab", 9.0 -> "A", 10.0 -> "A#,Bb", 11.0 -> "B")
 
   val standardPitch: Int = 440
 
@@ -34,6 +33,12 @@ object Pitch {
    * Companion object for the pitch class representation for the 12 tone system
    */
   object TwelveTone {
+
+    private val _names: Map[Double, String] = Map(0.0 -> "C", 1.0 -> "C#/Db", 2.0 -> "D", 3.0 -> "D#/Eb", 4.0 -> "E", 5.0 -> "F", 6.0 -> "F#/Gb",
+      7.0 -> "G", 8.0 -> "G#/Ab", 9.0 -> "A", 10.0 -> "A#,Bb", 11.0 -> "B")
+
+    def pitchName(pitch: Double): String = _names(rint(pitch))
+
     def apply(pitch: Double): TwelveTone = {
       new TwelveTone(pitch % 12)
     }
@@ -61,12 +66,30 @@ object Pitch {
      */
     def pitchOctaveFreq(pitch: Double, octave: Int): Double = {
       val newP = (pitch % 12) + (12 * (octave - 4)) // Pitch 0 would be C4
-      // somehow 0.0 behaves as if it were 1.0 ????
-      /*newP match {
-        case 0.0 => pow(10, (log10(2) * ((0 - 9) / 12)) + log10(standardPitch))
-        case num => pow(10, (log10(2) * ((num - 9) / 12)) + log10(standardPitch))
-      }*/
       pow(10, (log10(2) * ((newP - 9) / 12)) + log10(standardPitch))
+    }
+
+    /**
+     * Returns the SpecificPitch with the given pitch right above the given SpecificPitch.
+     * nextAbove(C4, A) would return A4 and nextAbove(A4, C) would return C5
+     * @param basePitch
+     * @param nextPitch
+     * @return
+     */
+    def nextAbove(basePitch: SpecificPitch, nextPitch: Double): SpecificPitch = {
+      val combined = basePitch.pitch + nextPitch
+      val octave: Int = round(floor(combined/12).floatValue()) + basePitch.octave
+      SpecificPitch(nextPitch, octave)
+    }
+
+    /**
+     * Switches the Specific pitch with the one an octave below it and calls next Above
+     * @param basePitch
+     * @param nextPitch
+     * @return
+     */
+    def nextBelow(basePitch: SpecificPitch, nextPitch: Double): SpecificPitch = {
+      nextAbove(SpecificPitch(basePitch.pitch, basePitch.octave -1), nextPitch)
     }
   }
 
@@ -87,7 +110,19 @@ object Pitch {
 
     def apply(octave: Int): Double = octaveFreq(octave)
 
-    override def toString: String = s"pitch: $pitch, letter name: ${names(rint(pitch))}"
+    def asName(): String = _names(rint(pitch))
+
+    override def toString: String = s"pitch: $pitch, letter name: ${_names(rint(pitch))}"
   }
 
+  case class SpecificPitch(pitch: Double, octave: Int) extends Ordered[SpecificPitch] {
+    import TwelveTone.nextAbove
+    override def compare(that: SpecificPitch): Int = {
+      if (that.octave == octave) that.pitch compareTo pitch else that.octave compareTo octave
+    }
+    // because of this SpecificPitch is only defined for TwelveTone PitchSpace
+  }
+
+  object SpecificPitch{
+  }
 }
